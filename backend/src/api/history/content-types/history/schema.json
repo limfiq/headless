@@ -1,0 +1,31 @@
+{
+  "kind": "collectionType",
+  "collectionName": "histories",
+  "info": {
+    "singularName": "history",
+    "pluralName": "histories",
+    "displayName": "History"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "nim": {
+      "type": "string",
+      "required": true,
+      "regex": "^[1,3][1][0-9][0-9][0,1][0-9]{5}$",
+      "maxLength": 10,
+      "minLength": 10
+    },
+    "semester": {
+      "type": "integer"
+    },
+    "tanggal": {
+      "type": "date"
+    },
+    "history": {
+      "type": "richtext"
+    }
+  }
+}

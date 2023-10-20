@@ -1,0 +1,32 @@
+{
+  "kind": "collectionType",
+  "collectionName": "mahasiswas",
+  "info": {
+    "singularName": "mahasiswa",
+    "pluralName": "mahasiswas",
+    "displayName": "Mahasiswa",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "nim": {
+      "type": "string",
+      "required": true,
+      "unique": true,
+      "maxLength": 10,
+      "regex": "^[1,3][1][0-9][0-9][0,1][0-9]{5}$"
+    },
+    "nama": {
+      "type": "string"
+    },
+    "angkatan": {
+      "type": "string"
+    },
+    "prodi": {
+      "type": "string"
+    }
+  }
+}
