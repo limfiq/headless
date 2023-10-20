@@ -6,12 +6,12 @@ export default function Home() {
       <html lang="en">
       <head>
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>Document</title>
+        <title>CRUD Next - Strapi</title>
       </head>
       <body>
-        <header>Limfiq | Blog </header>
+        <header>Pilih Metode </header>
         <main>
-          
+            <button type='button' title='Fetching'/>
         </main>
         <footer>
           <div>
