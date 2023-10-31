@@ -735,7 +735,6 @@ export interface ApiMahasiswaMahasiswa extends Schema.CollectionType {
       }>;
     nama: Attribute.String;
     angkatan: Attribute.String;
-    prodi: Attribute.String;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     publishedAt: Attribute.DateTime;

@@ -24,9 +24,6 @@
     },
     "angkatan": {
       "type": "string"
-    },
-    "prodi": {
-      "type": "string"
     }
   }
 }
