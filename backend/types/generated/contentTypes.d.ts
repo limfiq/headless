@@ -735,6 +735,11 @@ export interface ApiMahasiswaMahasiswa extends Schema.CollectionType {
       }>;
     nama: Attribute.String;
     angkatan: Attribute.String;
+    prodi: Attribute.Relation<
+      'api::mahasiswa.mahasiswa',
+      'manyToOne',
+      'api::prodi.prodi'
+    >;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     publishedAt: Attribute.DateTime;
@@ -746,6 +751,41 @@ export interface ApiMahasiswaMahasiswa extends Schema.CollectionType {
       Attribute.Private;
     updatedBy: Attribute.Relation<
       'api::mahasiswa.mahasiswa',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+  };
+}
+
+export interface ApiProdiProdi extends Schema.CollectionType {
+  collectionName: 'prodis';
+  info: {
+    singularName: 'prodi';
+    pluralName: 'prodis';
+    displayName: 'prodi';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    nama: Attribute.String;
+    mahasiswas: Attribute.Relation<
+      'api::prodi.prodi',
+      'oneToMany',
+      'api::mahasiswa.mahasiswa'
+    >;
+    createdAt: Attribute.DateTime;
+    updatedAt: Attribute.DateTime;
+    publishedAt: Attribute.DateTime;
+    createdBy: Attribute.Relation<
+      'api::prodi.prodi',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+    updatedBy: Attribute.Relation<
+      'api::prodi.prodi',
       'oneToOne',
       'admin::user'
     > &
@@ -771,6 +811,7 @@ declare module '@strapi/types' {
       'plugin::i18n.locale': PluginI18NLocale;
       'api::history.history': ApiHistoryHistory;
       'api::mahasiswa.mahasiswa': ApiMahasiswaMahasiswa;
+      'api::prodi.prodi': ApiProdiProdi;
     }
   }
 }

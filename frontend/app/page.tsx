@@ -5,7 +5,6 @@ export default function Home() {
     <div>
       <ul>
         <li><Link href="/fetch">Fetch</Link></li>
-        <li><Link href="/axios">Axios</Link></li>
       </ul>
       <h2>Home</h2>
       <p>Welcome to the home page.</p>

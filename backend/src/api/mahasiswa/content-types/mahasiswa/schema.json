@@ -24,6 +24,12 @@
     },
     "angkatan": {
       "type": "string"
+    },
+    "prodi": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::prodi.prodi",
+      "inversedBy": "mahasiswas"
     }
   }
 }

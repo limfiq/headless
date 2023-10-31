@@ -8,9 +8,10 @@ export default function Fetchpage() {
       <ul>
         <li><Link href="/">Home</Link></li>
         <li><Link href="/fetch">Fetch</Link></li>
-        <li><Link href="/axios">Axios</Link></li>
+       
       </ul>
       <h1>Ini Halaman Fetch</h1>
+      
       
     </div>
   )
