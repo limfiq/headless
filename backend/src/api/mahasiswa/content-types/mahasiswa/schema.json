@@ -4,32 +4,23 @@
   "info": {
     "singularName": "mahasiswa",
     "pluralName": "mahasiswas",
-    "displayName": "Mahasiswa",
-    "description": ""
+    "displayName": "Mahasiswa"
   },
   "options": {
     "draftAndPublish": true
   },
   "pluginOptions": {},
   "attributes": {
-    "nim": {
+    "NIM": {
       "type": "string",
       "required": true,
-      "unique": true,
-      "maxLength": 10,
-      "regex": "^[1,3][1][0-9][0-9][0,1][0-9]{5}$"
+      "maxLength": 10
     },
-    "nama": {
+    "Nama": {
       "type": "string"
     },
     "angkatan": {
       "type": "string"
-    },
-    "prodi": {
-      "type": "relation",
-      "relation": "manyToOne",
-      "target": "api::prodi.prodi",
-      "inversedBy": "mahasiswas"
     }
   }
 }
