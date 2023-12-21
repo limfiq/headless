@@ -59,3 +59,8 @@ body {
 .btn-green:hover {
   @apply bg-green-700;
 }
+
+.table{
+  border: 1;
+  border-color: aqua;
+}

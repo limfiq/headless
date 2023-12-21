@@ -4,19 +4,17 @@
   "info": {
     "singularName": "mahasiswa",
     "pluralName": "mahasiswas",
-    "displayName": "Mahasiswa"
+    "displayName": "mahasiswa"
   },
   "options": {
     "draftAndPublish": true
   },
   "pluginOptions": {},
   "attributes": {
-    "NIM": {
-      "type": "string",
-      "required": true,
-      "maxLength": 10
+    "nim": {
+      "type": "string"
     },
-    "Nama": {
+    "nama": {
       "type": "string"
     },
     "angkatan": {

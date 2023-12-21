@@ -367,18 +367,14 @@ export interface ApiMahasiswaMahasiswa extends Schema.CollectionType {
   info: {
     singularName: 'mahasiswa';
     pluralName: 'mahasiswas';
-    displayName: 'Mahasiswa';
+    displayName: 'mahasiswa';
   };
   options: {
     draftAndPublish: true;
   };
   attributes: {
-    NIM: Attribute.String &
-      Attribute.Required &
-      Attribute.SetMinMaxLength<{
-        maxLength: 10;
-      }>;
-    Nama: Attribute.String;
+    nim: Attribute.String;
+    nama: Attribute.String;
     angkatan: Attribute.String;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;

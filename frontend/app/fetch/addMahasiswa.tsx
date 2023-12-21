@@ -1,98 +1,138 @@
-"use client";
+'use client'
+import { useState, useEffect } from "react";
+import axios from 'axios';
+import Modal from 'react-modal';
 
-import { SyntheticEvent, useState } from "react";
-import { useRouter } from "next/navigation";
+interface Mahasiswa {
+  id: number;
+  attributes: {
+    NIM: string;
+    Nama: string;
+    angkatan: string;
+    createdAt: string;
+    updatedAt: string;
+    publishedAt: string;
+  };
+}
 
-export default function AddProduct() {
-  const [title, setTitle] = useState("");
-  const [price, setPrice] = useState("");
-  const [modal, setModal] = useState(false);
-  const [isMutating, setIsMutating] = useState(false);
+async function getData(): Promise<Mahasiswa[]> {
+  try {
+    const response = await axios.get('http://localhost:1337/api/mahasiswas');
+    return response.data.data as Mahasiswa[];
+  } catch (error) {
+    throw new Error("Gagal Mendapat Data");
+  }
+}
 
-  const router = useRouter();
-
-  async function handleSubmit(e: SyntheticEvent) {
-    e.preventDefault();
-
-    setIsMutating(true);
-
-    await fetch("http://localhost:5000/products", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
+async function createMahasiswa(newMahasiswa: Mahasiswa): Promise<void> {
+  try {
+    await axios.post('http://localhost:1337/api/mahasiswas', {
+      data: {
+        attributes: newMahasiswa.attributes,
       },
-      body: JSON.stringify({
-        title: title,
-        price: price,
-      }),
     });
-
-    setIsMutating(false);
-
-    setTitle("");
-    setPrice("");
-    router.refresh();
-    setModal(false);
+  } catch (error) {
+    throw new Error("Gagal Menambahkan Mahasiswa");
   }
+}
 
-  function handleChange() {
-    setModal(!modal);
-  }
+export default function Page() {
+  const [data, setData] = useState<Mahasiswa[]>([]);
+  const [selectedMahasiswa, setSelectedMahasiswa] = useState<Mahasiswa | null>(null);
+  const [modalIsOpen, setModalIsOpen] = useState(false);
+  const [newMahasiswa, setNewMahasiswa] = useState({
+    NIM: "",
+    Nama: "",
+    angkatan: "",
+  });
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  const fetchData = async () => {
+    try {
+      const fetchedData = await getData();
+      setData(fetchedData || []);
+    } catch (error) {
+      console.error('Error:', error);
+    }
+  };
+
+  const handleShow = (mahasiswa: Mahasiswa) => {
+    setSelectedMahasiswa(mahasiswa);
+    setModalIsOpen(true);
+  };
+
+  const closeModal = () => {
+    setSelectedMahasiswa(null);
+    setModalIsOpen(false);
+  };
+
+  const handleCreate = async () => {
+    try {
+      //await createMahasiswa({
+        //id: 0, // You can set a temporary ID or handle it on the server side
+       // attributes: newMahasiswa,
+      //});
+      setModalIsOpen(false);
+      setNewMahasiswa({ NIM: "", Nama: "", angkatan: "" });
+      fetchData(); // Refresh the data after creating a new Mahasiswa
+    } catch (error) {
+      console.error('Error:', error);
+    }
+  };
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setNewMahasiswa((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
 
   return (
-    <div>
-      <button className="btn" onClick={handleChange}>
-        Add New
-      </button>
+    <main>
+      <h1 style={{ color: "blue" }}>Daftar Mahasiswa</h1>
+      <button onClick={() => setModalIsOpen(true)}>Tambah Mahasiswa</button>
 
-      <input
-        type="checkbox"
-        checked={modal}
-        onChange={handleChange}
-        className="modal-toggle"
-      />
+      <ul>
+        {data.map((mahasiswa) => (
+          <li key={mahasiswa.id}>
+            {mahasiswa.attributes.NIM} - {mahasiswa.attributes.Nama}
+            <button onClick={() => handleShow(mahasiswa)}>Show</button>
+          </li>
+        ))}
+      </ul>
 
-      <div className="modal">
-        <div className="modal-box">
-          <h3 className="font-bold text-lg">Add New Product</h3>
-          <form onSubmit={handleSubmit}>
-            <div className="form-control">
-              <label className="label font-bold">Title</label>
-              <input
-                type="text"
-                value={title}
-                onChange={(e) => setTitle(e.target.value)}
-                className="input w-full input-bordered"
-                placeholder="Product Name"
-              />
-            </div>
-            <div className="form-control">
-              <label className="label font-bold">Price</label>
-              <input
-                type="text"
-                value={price}
-                onChange={(e) => setPrice(e.target.value)}
-                className="input w-full input-bordered"
-                placeholder="Price"
-              />
-            </div>
-            <div className="modal-action">
-              <button type="button" className="btn" onClick={handleChange}>
-                Close
-              </button>
-              {!isMutating ? (
-                <button type="submit" className="btn btn-primary">
-                  Save
-                </button>
-              ) : (
-                <button type="button" className="btn loading">
-                  Saving...
-                </button>
-              )}
-            </div>
+      <Modal
+        isOpen={modalIsOpen}
+        onRequestClose={closeModal}
+        contentLabel="Mahasiswa Details"
+      >
+        <div>
+          <h2>Tambah Mahasiswa</h2>
+          <form>
+            <label>
+              NIM:
+              <input type="text" name="NIM" value={newMahasiswa.NIM} onChange={handleInputChange} />
+            </label>
+            <br />
+            <label>
+              Nama:
+              <input type="text" name="Nama" value={newMahasiswa.Nama} onChange={handleInputChange} />
+            </label>
+            <br />
+            <label>
+              Angkatan:
+              <input type="text" name="angkatan" value={newMahasiswa.angkatan} onChange={handleInputChange} />
+            </label>
+            <br />
+            <button type="button" onClick={handleCreate}>Simpan</button>
+            <button type="button" onClick={closeModal}>Batal</button>
           </form>
         </div>
-      </div>
-    </div>
+      </Modal>
+    </main>
   );
 }
