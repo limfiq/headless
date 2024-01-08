@@ -102,12 +102,14 @@
 import { useState, useEffect } from "react";
 import axios from 'axios';
 import Modal from 'react-modal';
+import router, { useRouter } from 'next/router';
+
 
 interface Mahasiswa {
   id: number;
   attributes: {
-    NIM: string;
-    Nama: string;
+    nim: string;
+    nama: string;
     angkatan: string;
     createdAt: string;
     updatedAt: string;
@@ -146,6 +148,28 @@ export default function Page() {
     setSelectedMahasiswa(mahasiswa);
     setModalIsOpen(true);
   };
+  const handleCreate = (mahasiswa: Mahasiswa) => {
+    setSelectedMahasiswa(mahasiswa);
+    router.push('/addMahasiswa');
+  };
+
+  const handleEdit = (mahasiswa: Mahasiswa) => {
+    setSelectedMahasiswa(mahasiswa);
+    router.push(`/editMahasiswa/${mahasiswa.id}`);
+  };
+
+  const handleDelete = async (mahasiswa: Mahasiswa) => {
+    try {
+      // Implement your delete logic here
+      await axios.delete(`http://localhost:1337/api/mahasiswas/${mahasiswa.id}`);
+      // Fetch updated data after deletion
+      const updatedData = await getData();
+      setData(updatedData || []);
+    } catch (error) {
+      console.error('Error deleting Mahasiswa:', error);
+    }
+  };
+
 
   const closeModal = () => {
     setSelectedMahasiswa(null);
@@ -155,28 +179,54 @@ export default function Page() {
   return (
     <main>
       <h1 style={{ color: "blue" }}>Daftar Mahasiswa</h1>
+      {data.map((mahasiswa) => (
+          <table className="table" key={mahasiswa.id}>
+            
+            
+            <thead>
+          <td>NO</td>
+          <td>Nama</td>
+          <td>Aksi</td>
+        </thead>
+        <tbody>
+          <td>{mahasiswa.id}</td>
+          <td>{mahasiswa.attributes.nama}</td>
+          <td>
+              <button className="btn btn-blue" onClick={() => handleShow(mahasiswa)}>Detail</button>
+              <button className="btn btn-green" onClick={() => handleCreate(mahasiswa)}>Tambah</button>
+              <button className="btn btn-yellow" onClick={() => handleEdit(mahasiswa)}>Edit</button>
+              <button className="btn btn-red" onClick={() => handleDelete(mahasiswa)}>Hapus</button>
+            </td>
+        </tbody>
+      </table>
+
+        ))}
+      
+{/*         
+      
       <ul>
+        
         {data.map((mahasiswa) => (
           <li key={mahasiswa.id}>
-            {mahasiswa.attributes.NIM} - {mahasiswa.attributes.Nama}
+            {mahasiswa.attributes.nim} - {mahasiswa.attributes.nama}
             <button onClick={() => handleShow(mahasiswa)}>Show</button>
           </li>
         ))}
-      </ul>
+      </ul> */}
 
       <Modal
         isOpen={modalIsOpen}
         onRequestClose={closeModal}
-        contentLabel="Mahasiswa Details"
+        contentLabel="Detail Mahasiswa"
       >
         {selectedMahasiswa && (
           <div>
             <h2>Mahasiswa Details</h2>
-            <p>NIM: {selectedMahasiswa.attributes.NIM}</p>
-            <p>Nama: {selectedMahasiswa.attributes.Nama}</p>
+            <p>NIM: {selectedMahasiswa.attributes.nim}</p>
+            <p>Nama: {selectedMahasiswa.attributes.nama}</p>
             <p>Angkatan: {selectedMahasiswa.attributes.angkatan}</p>
             {/* Add other details as needed */}
-            <button onClick={closeModal}>Close</button>
+            <button className="btn btn-red" onClick={closeModal}>Tutup</button>
           </div>
         )}
       </Modal>

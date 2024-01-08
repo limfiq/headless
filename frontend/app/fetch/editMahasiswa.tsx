@@ -1,10 +1,18 @@
-// pages/addMahasiswa.tsx
-
-import { useState } from 'react';
+// pages/editMahasiswa.tsx
+import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useRouter } from 'next/router';
 
-const AddMahasiswaPage = () => {
+interface Mahasiswa {
+  id: number;
+  attributes: {
+    nim: string;
+    nama: string;
+    angkatan: string;
+  };
+}
+
+const EditMahasiswaPage = () => {
   const [formData, setFormData] = useState({
     nim: '',
     nama: '',
@@ -12,6 +20,27 @@ const AddMahasiswaPage = () => {
   });
 
   const router = useRouter();
+  const { id } = router.query;
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get(`http://localhost:1337/api/mahasiswas/${id}`);
+        const mahasiswaData = response.data.data as Mahasiswa;
+        setFormData({
+          nim: mahasiswaData.attributes.nim,
+          nama: mahasiswaData.attributes.nama,
+          angkatan: mahasiswaData.attributes.angkatan,
+        });
+      } catch (error) {
+        console.error('Error fetching Mahasiswa:', error);
+      }
+    };
+
+    if (id) {
+      fetchData();
+    }
+  }, [id]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -25,19 +54,19 @@ const AddMahasiswaPage = () => {
     e.preventDefault();
 
     try {
-      await axios.post('http://localhost:1337/api/mahasiswas', {
+      await axios.put(`http://localhost:1337/api/mahasiswas/${id}`, {
         data: formData,
       });
       // Redirect to the Mahasiswa list page after successful submission
       router.push('/mahasiswa');
     } catch (error) {
-      console.error('Error adding Mahasiswa:', error);
+      console.error('Error updating Mahasiswa:', error);
     }
   };
 
   return (
     <div>
-      <h1>Add Mahasiswa</h1>
+      <h1>Edit Mahasiswa</h1>
       <form onSubmit={handleSubmit}>
         <label>
           NIM:
@@ -54,10 +83,10 @@ const AddMahasiswaPage = () => {
           <input type="text" name="angkatan" value={formData.angkatan} onChange={handleChange} />
         </label>
         <br />
-        <button type="submit">Tambah Mahasiswa</button>
+        <button type="submit">Update Mahasiswa</button>
       </form>
     </div>
   );
 };
 
-export default AddMahasiswaPage;
+export default EditMahasiswaPage;
